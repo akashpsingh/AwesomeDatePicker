@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import akash.com.awesomedatepicker.center_lock_utils.CenterLockListener;
@@ -22,6 +24,10 @@ import akash.com.awesomedatepicker.center_lock_utils.LockListener;
  * Created by akashsingh on 10/10/15.
  */
 public class DatePickerFragment extends Fragment implements LockListener {
+
+    public static final String DAY = "day";
+    public static final String MONTH = "month";
+    public static final String YEAR = "year";
 
     private Context mContext;
 
@@ -40,6 +46,14 @@ public class DatePickerFragment extends Fragment implements LockListener {
     private List<CustomListItem> mDays;
     private List<CustomListItem> mMonths;
     private List<CustomListItem> mYears;
+
+    private DateSelectListener mDateSelectListener;
+
+    private View mToolbarDone;
+
+    private int mInitDay;
+    private int mInitMonth;
+    private int mInitYear;
 
     static class CustomListItem {
 
@@ -76,6 +90,16 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
         mContext = getActivity();
 
+        mInitDay = mInitMonth = mInitYear = -1;
+
+        if(getArguments() != null) {
+
+            mInitDay = getArguments().getInt(DAY);
+            mInitMonth = getArguments().getInt(MONTH);
+            mInitYear = getArguments().getInt(YEAR);
+
+        }
+
         initViews(view);
 
         return view;
@@ -90,6 +114,21 @@ public class DatePickerFragment extends Fragment implements LockListener {
         mDayHandle = view.findViewById(R.id.day_handle);
         mMonthHandle = view.findViewById(R.id.month_handle);
         mYearHandle = view.findViewById(R.id.year_handle);
+
+        mToolbarDone = view.findViewById(R.id.toolbar_done);
+
+        mToolbarDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int day = Integer.parseInt(mDays.get(mSelectedDayPosition).getValue());
+                int month = mSelectedMonthPosition + 1;
+                int year = Integer.parseInt(mYears.get(mSelectedYearPosition).getValue());
+
+                mDateSelectListener.onDateSelected(day, month, year);
+
+            }
+        });
 
         setupRecyclerViews();
 
@@ -106,6 +145,15 @@ public class DatePickerFragment extends Fragment implements LockListener {
     private void setupDayRecyclerView() {
 
         mDays = getDayList();
+
+        if(mInitDay != -1) {
+
+            mSelectedDayPosition = mInitDay - 1;
+
+        } else {
+
+            mSelectedDayPosition = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1;
+        }
 
         mDays.get(mSelectedDayPosition).setSelected(true);
 
@@ -143,6 +191,16 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
         mMonths = getMonthList();
 
+        if(mInitMonth != -1) {
+
+            mSelectedMonthPosition = mInitMonth - 1;
+
+        } else {
+
+            mSelectedMonthPosition = Calendar.getInstance().get(Calendar.MONTH);
+
+        }
+
         mMonths.get(mSelectedMonthPosition).setSelected(true);
 
         mMonthList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -178,6 +236,16 @@ public class DatePickerFragment extends Fragment implements LockListener {
     private void setupYearRecyclerView() {
 
         mYears = getYearList();
+
+        if(mInitYear != -1) {
+
+            mSelectedYearPosition = mInitYear - 1900;
+
+        } else {
+
+            mSelectedYearPosition = Calendar.getInstance().get(Calendar.YEAR) - 1900;
+
+        }
 
         mYears.get(mSelectedYearPosition).setSelected(true);
 
@@ -263,6 +331,10 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
             case R.id.day_list:
 
+                if(pos >= mDays.size()) {
+                    pos = mDays.size() - 1;
+                }
+
                 mDays.get(mSelectedDayPosition).setSelected(false);
                 mDays.get(pos).setSelected(true);
                 mSelectedDayPosition = pos;
@@ -272,21 +344,162 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
             case R.id.month_list:
 
+                if(pos >= mMonths.size()) {
+                    pos = mMonths.size() - 1;
+                }
+
                 mMonths.get(mSelectedMonthPosition).setSelected(false);
                 mMonths.get(pos).setSelected(true);
                 mSelectedMonthPosition = pos;
                 mMonthList.getAdapter().notifyDataSetChanged();
 
+                if(pos == 0 || pos == 2 || pos == 4 || pos == 6 || pos == 7 || pos == 9 || pos == 11) {
+
+                    if (mDays.size() != 31) {
+
+                        for(int i = mDays.size() + 1; i <= 31; i++) {
+                            mDays.add(new CustomListItem(i + "", false));
+                        }
+                    }
+
+                } else if(pos == 1) {
+
+                    int selectedYear = Integer.parseInt(mYears.get(mSelectedYearPosition).getValue());
+
+                    if(isLeapYear(selectedYear)) {
+
+                        if(mDays.size() < 29) {
+
+                            mDays.add(new CustomListItem("29", false));
+
+                        } else if(mDays.size() > 29) {
+
+                            for(int i = mDays.size() - 1; i > 28; i--) {
+                                mDays.remove(i);
+                            }
+
+                            if(mSelectedDayPosition > 28) {
+                                mSelectedDayPosition = 28;
+                            }
+
+                        }
+
+                    } else {
+
+                        if(mDays.size() > 28) {
+
+                            for(int i = mDays.size() - 1; i > 27; i--) {
+                                mDays.remove(i);
+                            }
+
+                            if(mSelectedDayPosition > 27) {
+                                mSelectedDayPosition = 27;
+                            }
+                        }
+                    }
+
+                } else if(mDays.size() != 30) {
+
+                    if(mDays.size() < 30) {
+
+                        //add additional days to the list
+
+                        for(int i = mDays.size() + 1; i <= 30; i++) {
+                            mDays.add(new CustomListItem(i + "", false));
+                        }
+
+                    } else {
+
+                        if(mDays.size() == 31) {
+                            mDays.remove(30);
+                        }
+
+                        if (mSelectedDayPosition > 29) {
+                            mSelectedDayPosition = 29;
+                        }
+
+                    }
+                }
+
+                mDays.get(mSelectedDayPosition).setSelected(true);
+                mDayList.getAdapter().notifyDataSetChanged();
+                mDayList.scrollToPosition(mSelectedDayPosition);
+
                 break;
 
             case R.id.year_list:
+
+                if(pos >= mYears.size()) {
+                    pos = mYears.size() - 1;
+                }
 
                 mYears.get(mSelectedYearPosition).setSelected(false);
                 mYears.get(pos).setSelected(true);
                 mSelectedYearPosition = pos;
                 mYearList.getAdapter().notifyDataSetChanged();
 
+                int selectedYear = Integer.parseInt(mYears.get(pos).getValue());
+
+                if(isLeapYear(selectedYear)) {
+
+                    if(mSelectedMonthPosition == 1) {
+
+                        if(mDays.size() < 29) {
+
+                            mDays.add(new CustomListItem("29", false));
+
+                        } else if(mDays.size() > 29) {
+
+                            for(int i = mDays.size() - 1; i > 28; i--) {
+                                mDays.remove(i);
+                            }
+
+                            if(mSelectedDayPosition > 28) {
+                                mSelectedDayPosition = 28;
+                            }
+                        }
+                    }
+
+                } else {
+
+                    if(mSelectedMonthPosition == 1) {
+
+                        if(mDays.size() > 28) {
+
+                            for(int i = mDays.size() - 1; i > 27; i--) {
+                                mDays.remove(i);
+                            }
+
+                            if(mSelectedDayPosition > 27) {
+                                mSelectedDayPosition = 27;
+                            }
+
+                        }
+                    }
+
+                }
+
+
+                mDays.get(mSelectedDayPosition).setSelected(true);
+                mDayList.getAdapter().notifyDataSetChanged();
+                mDayList.scrollToPosition(mSelectedDayPosition);
+
                 break;
         }
+
+        Log.d("====day:", mSelectedDayPosition +"");
+        Log.d("====month:", mSelectedMonthPosition+"");
+        Log.d("====year:", mSelectedYearPosition+"\n");
+    }
+
+    private boolean isLeapYear(int year) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        return cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
+    }
+
+    public void setDateSelectedListener(DateSelectListener listener) {
+        mDateSelectListener = listener;
     }
 }

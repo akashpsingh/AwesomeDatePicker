@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -17,8 +18,24 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        DatePickerFragment fragment = new DatePickerFragment();
+
+        fragment.setDateSelectedListener(new DateSelectListener() {
+            @Override
+            public void onDateSelected(int day, int month, int year) {
+                Toast.makeText(SampleActivity.this, "day : " + day + " month : " + month + " year : " + year, Toast.LENGTH_SHORT);
+            }
+        });
+
+        Bundle args = new Bundle();
+        args.putInt(DatePickerFragment.DAY, 9);
+        args.putInt(DatePickerFragment.MONTH, 11);
+        args.putInt(DatePickerFragment.YEAR, 1992);
+
+        fragment.setArguments(args);
+
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new DatePickerFragment())
+                .add(R.id.fragment_container, fragment)
                 .commit();
 
     }
