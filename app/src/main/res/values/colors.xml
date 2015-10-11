@@ -8,5 +8,6 @@
     <color name="yellow_900">#f57f17</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="black_base">#263238</color>
 
 </resources>

@@ -88,6 +88,8 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
         View view = inflater.inflate(R.layout.fragment_date_picker, container, false);
 
+        setRetainInstance(true);
+
         mContext = getActivity();
 
         mInitDay = mInitMonth = mInitYear = -1;
@@ -136,9 +138,10 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
     private void setupRecyclerViews() {
 
-        setupDayRecyclerView();
         setupMonthRecyclerView();
         setupYearRecyclerView();
+        setupDayRecyclerView();
+
 
     }
 
@@ -283,9 +286,31 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
     private List<CustomListItem> getDayList() {
 
+        int selectedMonth = mSelectedMonthPosition;
+        int selectedYear = Integer.parseInt(mYears.get(mSelectedYearPosition).getValue());
+
+        int daysCount;
+
+        if(selectedMonth == 0 || selectedMonth == 2 || selectedMonth == 4 || selectedMonth == 6 || selectedMonth == 7
+                || selectedMonth == 9 || selectedMonth == 11) {
+
+            daysCount = 31;
+
+        } else if(selectedMonth == 1) {
+
+            if(isLeapYear(selectedYear)) {
+                daysCount = 29;
+            } else {
+                daysCount = 28;
+            }
+        } else {
+
+            daysCount = 30;
+        }
+
         List<CustomListItem> dayList = new ArrayList<>();
 
-        for(int i = 1; i <= 31; i++) {
+        for(int i = 1; i <= daysCount; i++) {
             dayList.add(new CustomListItem(i + "", false));
         }
 

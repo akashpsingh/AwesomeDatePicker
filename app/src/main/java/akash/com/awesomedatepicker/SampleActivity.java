@@ -1,5 +1,6 @@
 package akash.com.awesomedatepicker;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,12 +19,18 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Only for post LOLLIPOP versions.
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black_base));
+        }
+
         DatePickerFragment fragment = new DatePickerFragment();
 
         fragment.setDateSelectedListener(new DateSelectListener() {
             @Override
             public void onDateSelected(int day, int month, int year) {
-                Toast.makeText(SampleActivity.this, "day : " + day + " month : " + month + " year : " + year, Toast.LENGTH_SHORT);
+
+                Toast.makeText(SampleActivity.this, "day : " + day + " month : " + month + " year : " + year, Toast.LENGTH_SHORT).show();
             }
         });
 
