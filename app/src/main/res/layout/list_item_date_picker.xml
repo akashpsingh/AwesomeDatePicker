@@ -3,7 +3,6 @@
     android:id="@+id/list_item_content"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:text="Jun"
     android:textSize="20sp"
     android:gravity="center"
     android:textColor="@color/white"/>

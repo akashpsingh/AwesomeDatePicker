@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +29,11 @@ public class DatePickerFragment extends Fragment implements LockListener {
     public static final String DAY = "day";
     public static final String MONTH = "month";
     public static final String YEAR = "year";
+
+    private static final String SELECTED_DAY = "selected_day";
+    private static final String SELECTED_MONTH = "selected_month";
+    private static final String SELECTED_YEAR = "selected_year";
+
 
     private Context mContext;
 
@@ -87,8 +93,6 @@ public class DatePickerFragment extends Fragment implements LockListener {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_date_picker, container, false);
-
-        setRetainInstance(true);
 
         mContext = getActivity();
 
@@ -517,6 +521,40 @@ public class DatePickerFragment extends Fragment implements LockListener {
         Log.d("====year:", mSelectedYearPosition+"\n");
     }
 
+    @Override
+    public void hideOtherLists(int scrollingListId) {
+
+        switch(scrollingListId) {
+
+            case R.id.day_list :
+
+                mMonthList.setVisibility(View.GONE);
+                mYearList.setVisibility(View.GONE);
+                break;
+
+            case R.id.month_list :
+
+                mDayList.setVisibility(View.GONE);
+                mYearList.setVisibility(View.GONE);
+                break;
+
+            case R.id.year_list :
+
+                mDayList.setVisibility(View.GONE);
+                mMonthList.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void makeListsVisible() {
+
+        mDayList.setVisibility(View.VISIBLE);
+        mMonthList.setVisibility(View.VISIBLE);
+        mYearList.setVisibility(View.VISIBLE);
+
+    }
+
     private boolean isLeapYear(int year) {
 
         Calendar cal = Calendar.getInstance();
@@ -527,4 +565,28 @@ public class DatePickerFragment extends Fragment implements LockListener {
     public void setDateSelectedListener(DateSelectListener listener) {
         mDateSelectListener = listener;
     }
+
+
+
+    /*@Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt(SELECTED_DAY, mSelectedDayPosition);
+        outState.putInt(SELECTED_MONTH, mSelectedMonthPosition);
+        outState.putInt(SELECTED_YEAR, mSelectedYearPosition);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null) {
+
+            mSelectedDayPosition = savedInstanceState.getInt(SELECTED_DAY);
+            mSelectedMonthPosition = savedInstanceState.getInt(SELECTED_MONTH);
+            mSelectedYearPosition = savedInstanceState.getInt(SELECTED_YEAR);
+        }
+    }*/
 }

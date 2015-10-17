@@ -7,5 +7,7 @@ public interface LockListener {
 
     void handlePositionChanged(int pos, int id);
 
+    void hideOtherLists(int scrollingListId);
 
+    void makeListsVisible();
 }

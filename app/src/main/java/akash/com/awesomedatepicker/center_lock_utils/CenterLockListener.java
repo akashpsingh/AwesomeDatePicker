@@ -30,27 +30,32 @@ public class CenterLockListener extends RecyclerView.OnScrollListener {
         if(SCREEN_CENTER==0){
             SCREEN_CENTER =(lm.getOrientation()==LinearLayoutManager.HORIZONTAL?(recyclerView.getLeft()+recyclerView.getRight()) :(recyclerView.getTop()+recyclerView.getBottom()));
         }
-        if(!autoSet){
-            if(newState==RecyclerView.SCROLL_STATE_IDLE){
+
+        if(!autoSet) {
+
+            if(newState==RecyclerView.SCROLL_STATE_IDLE) {
                 //ScrollStoppped
                 view=findCenterView(lm);//get the view nearest to center
                 int center= lm.getOrientation()==LinearLayoutManager.HORIZONTAL? (view.getLeft()+view.getRight())/2 :(view.getTop()+view.getBottom())/2;
                 int scrollNeeded= center-SCREEN_CENTER;//compute scroll from center
                 if(lm.getOrientation()==LinearLayoutManager.HORIZONTAL)
                     recyclerView.smoothScrollBy(scrollNeeded,0);
-                else
-                {
+                else {
                     recyclerView.smoothScrollBy(0, (int) (scrollNeeded));
-
                 }
                 autoSet=true;
                 if(mCallback != null) {
                     mCallback.handlePositionChanged(position, recyclerView.getId());
+                    //mCallback.makeListsVisible();
                 }
             }
         }
+
         if(newState==RecyclerView.SCROLL_STATE_DRAGGING || newState==RecyclerView.SCROLL_STATE_SETTLING){
             autoSet=false;
+
+            //hide other list when scrolling
+            //mCallback.hideOtherLists(recyclerView.getId());
         }
     }
 
