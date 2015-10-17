@@ -2,7 +2,9 @@
 
 An awesome and different date picker for android 4.0+ devices.
 
+**DEMO**
 
+![alt tag](https://cloud.githubusercontent.com/assets/12594899/10558587/1aa231a4-74f3-11e5-8d30-7e616f454b91.gif)
 
 **USAGE**
 
