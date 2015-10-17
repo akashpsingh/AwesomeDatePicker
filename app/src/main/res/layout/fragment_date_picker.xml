@@ -30,10 +30,14 @@
                     android:layout_weight="0.5"/>
 
 
-                <View
+                <TextView
                     android:id="@+id/day_handle"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/black"
                     android:background="@color/yellow_500"/>
 
 
@@ -71,10 +75,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"/>
 
-                <View
+                <TextView
                     android:id="@+id/month_handle"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/black"
                     android:background="@color/yellow_600"/>
 
 
@@ -110,10 +118,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"/>
 
-                <View
+                <TextView
                     android:id="@+id/year_handle"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:background="@color/yellow_900"/>
 
 

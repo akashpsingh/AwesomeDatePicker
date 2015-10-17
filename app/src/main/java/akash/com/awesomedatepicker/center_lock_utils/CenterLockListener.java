@@ -46,7 +46,7 @@ public class CenterLockListener extends RecyclerView.OnScrollListener {
                 autoSet=true;
                 if(mCallback != null) {
                     mCallback.handlePositionChanged(position, recyclerView.getId());
-                    //mCallback.makeListsVisible();
+                    mCallback.makeListsVisible();
                 }
             }
         }
@@ -55,7 +55,7 @@ public class CenterLockListener extends RecyclerView.OnScrollListener {
             autoSet=false;
 
             //hide other list when scrolling
-            //mCallback.hideOtherLists(recyclerView.getId());
+            mCallback.hideOtherLists(recyclerView.getId());
         }
     }
 

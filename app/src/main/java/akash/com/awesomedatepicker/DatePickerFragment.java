@@ -41,9 +41,9 @@ public class DatePickerFragment extends Fragment implements LockListener {
     private RecyclerView mMonthList;
     private RecyclerView mYearList;
 
-    private View mDayHandle;
-    private View mMonthHandle;
-    private View mYearHandle;
+    private TextView mDayHandle;
+    private TextView mMonthHandle;
+    private TextView mYearHandle;
 
     private int mSelectedDayPosition;
     private int mSelectedMonthPosition;
@@ -117,9 +117,9 @@ public class DatePickerFragment extends Fragment implements LockListener {
         mMonthList = (RecyclerView)view.findViewById(R.id.month_list);
         mYearList = (RecyclerView)view.findViewById(R.id.year_list);
 
-        mDayHandle = view.findViewById(R.id.day_handle);
-        mMonthHandle = view.findViewById(R.id.month_handle);
-        mYearHandle = view.findViewById(R.id.year_handle);
+        mDayHandle = (TextView)view.findViewById(R.id.day_handle);
+        mMonthHandle = (TextView)view.findViewById(R.id.month_handle);
+        mYearHandle = (TextView)view.findViewById(R.id.year_handle);
 
         mToolbarDone = view.findViewById(R.id.toolbar_done);
 
@@ -530,24 +530,38 @@ public class DatePickerFragment extends Fragment implements LockListener {
 
                 mMonthList.setVisibility(View.GONE);
                 mYearList.setVisibility(View.GONE);
+
+                mMonthHandle.setText(mMonths.get(mSelectedMonthPosition).getValue());
+                mYearHandle.setText(mYears.get(mSelectedYearPosition).getValue());
                 break;
 
             case R.id.month_list :
 
                 mDayList.setVisibility(View.GONE);
                 mYearList.setVisibility(View.GONE);
+
+                mDayHandle.setText(mDays.get(mSelectedDayPosition).getValue());
+                mYearHandle.setText(mYears.get(mSelectedYearPosition).getValue());
                 break;
 
             case R.id.year_list :
 
                 mDayList.setVisibility(View.GONE);
                 mMonthList.setVisibility(View.GONE);
+
+                mDayHandle.setText(mDays.get(mSelectedDayPosition).getValue());
+                mMonthHandle.setText(mMonths.get(mSelectedMonthPosition).getValue());
+
         }
 
     }
 
     @Override
     public void makeListsVisible() {
+
+        mDayHandle.setText("");
+        mMonthHandle.setText("");
+        mYearHandle.setText("");
 
         mDayList.setVisibility(View.VISIBLE);
         mMonthList.setVisibility(View.VISIBLE);
