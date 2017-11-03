@@ -1,6 +1,6 @@
 # AwesomeDatePicker
 
-An awesome and different date picker for android 4.0+ devices.
+A unique and great looking Date Picker widget for the android. This can be used in the place of the android's default DatePicker dialog. Supported on devices with android version 4.0+
 
 **DEMO**
 
@@ -8,23 +8,23 @@ An awesome and different date picker for android 4.0+ devices.
 
 **USAGE**
 
-This date picker makes use of `RecyclerView` so you need to add the following dependency to your `build.gradle` file:
+ - This date picker makes use of `RecyclerView` so you need to add the dependency to your `build.gradle` file:
 
-    compile 'com.android.support:recyclerview-v7:23.0.1'
+    `compile 'com.android.support:recyclerview-v7:23.0.1'`
 
 
-The picker can be used as a `Fragment`. The main Fragment used here is `DatePickerFragment`. So to set it up on an Activity just use the following code. The following code will set up the DatePicker with Today's date on it.
+ - The picker can be used as a `Fragment`. The main Fragment used here is `DatePickerFragment`. So to set it up on an Activity, use the following code. The following code will set up the DatePicker with Today's date selected.
 
-```
+```java
 mDatePicker = new DatePickerFragment();
 transaction.replace(R.id.fragment_container, mDatePickerFragment);
 transaction.commit();
 ```
 
 
-If you want to pass custom date to set on it, you can put the values in arguments and pass like the following:
+- If you want to pass custom date to set on it, you can put the values in the `Bundle` arguments:
 
-```
+```java
 DatePickerFragment fragment = new DatePickerFragment();
 
 Bundle args = new Bundle();
@@ -39,9 +39,9 @@ fragment.setArguments(args);
       .commit();
                 
 ```
-**Getting the value back from the DatePicker**
+**Getting the user set date back from the DatePicker**
 
-```
+```java
 DateSelectListener listener = new DateSelectListener() {
             @Override
             public void onDateSelected(int day, int month, int year) {
@@ -50,7 +50,7 @@ DateSelectListener listener = new DateSelectListener() {
             }
         };
         
-        fragment.setDateSelectedListener(listener); 
+fragment.setDateSelectedListener(listener); 
   ```
   
   **TODO**
